@@ -7,7 +7,7 @@ export const getAllSeries = async (_: Request, res: Response) => {
   try {
     const { rows } = await pool.query(getAllSeriesQuery)
 
-    res.json({ series: rows })
+    res.json({ series: rows, totalCount: rows.length })
   } catch (err) {
     console.log(err)
     res.status(500)
@@ -15,10 +15,10 @@ export const getAllSeries = async (_: Request, res: Response) => {
 }
 
 export const getSerie = async (req: Request, res: Response) => {
-  const { serie_id } = req.params
+  const { id } = req.params
 
   try {
-    const { rows } = await pool.query(getSerieQuery, [serie_id])
+    const { rows } = await pool.query(getSerieQuery, [id])
 
     if (rows.length <= 0) {
       res.status(404).send("No serie found")
