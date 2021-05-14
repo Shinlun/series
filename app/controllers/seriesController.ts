@@ -3,7 +3,8 @@ import type { Response, Request } from "express"
 import pool from "../db/dev/pool"
 import { getAllSeriesQuery, getSerieQuery } from "../queries/serieQueries"
 
-export const getAllSeries = async (_: Request, res: Response) => {
+export const getAllSeries = async (req: Request, res: Response) => {
+  console.log(req.query)
   try {
     const { rows } = await pool.query(getAllSeriesQuery)
 

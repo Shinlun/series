@@ -26,7 +26,7 @@ export const getAllSeriesByPlatform = async (req: Request, res: Response) => {
       return
     }
 
-    res.json({ series: rows })
+    res.json({ series: rows, totalCount: rows.length })
   } catch (err) {
     console.log(err)
     res.status(500).send(err)
