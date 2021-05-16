@@ -61,6 +61,7 @@ export const getAllSeriesByPlatform = async (req: Request, res: Response) => {
   const { sort, filter } = req.query
 
   let queryStr = getAllSeriesByPlatformQuery
+
   try {
     if (sort) {
       switch (sort) {
@@ -111,7 +112,7 @@ export const getAllSeriesByPlatform = async (req: Request, res: Response) => {
     const { rows } = await pool.query(queryStr, [id])
 
     if (rows.length <= 0) {
-      res.status(404).send("No series found for this platform")
+      res.status(404).send("No series found")
 
       return
     }
