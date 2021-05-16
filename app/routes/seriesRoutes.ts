@@ -1,6 +1,6 @@
 import express from "express"
 
-import { getAllSeries, getSerie } from "../controllers/seriesController"
+import { getAllSeries, getSerie } from "../controllers/serieController"
 import idMiddleware from "../middlewares/idMiddleware"
 
 const router = express.Router()
