@@ -5,6 +5,7 @@ import dotenv from "dotenv"
 import seriesRouter from "./routes/seriesRoutes"
 import platformsRouter from "./routes/platformsRoutes"
 import tagsRouter from "./routes/tagsRoutes"
+import waosRouter from "./routes/waosRoutes"
 
 dotenv.config()
 
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use(baseRoute, seriesRouter)
 app.use(baseRoute, platformsRouter)
 app.use(baseRoute, tagsRouter)
+app.use(baseRoute, waosRouter)
 
 app.listen(process.env.API_PORT).on("listening", () => {
   console.log(`🚀 are live on ${process.env.API_PORT}`)

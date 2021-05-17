@@ -9,6 +9,7 @@ type GetAllSeriesQueryType = {
   filter?: ParsedQuery
   platform_id?: ParsedQuery
   tag_id?: ParsedQuery
+  wao?: ParsedQuery
 }
 
 export const getSerieQuery = `
@@ -20,7 +21,7 @@ export const getSerieQuery = `
     GROUP BY platforms.platform_name, series.serie_id;
 `
 
-export const getAllSeriesQuery = ({ sort, filter, platform_id, tag_id }: GetAllSeriesQueryType) => {
+export const getAllSeriesQuery = ({ sort, filter, platform_id, tag_id, wao }: GetAllSeriesQueryType) => {
   const pSort = fromArrayToString(sort)
   const pFilter = fromArrayToString(filter)
 
@@ -31,6 +32,7 @@ export const getAllSeriesQuery = ({ sort, filter, platform_id, tag_id }: GetAllS
   const tagQuery = Array.isArray(tag_id)
     ? tag_id.map((id: ParsedQuery) => `${id} = ANY(ARRAY_AGG(tags.id))`).join(" AND ")
     : `${tag_id} = ANY(ARRAY_AGG(tags.id))`
+  const waoQuery = wao && wao.toString() === "true" ? `INNER JOIN waos ON waos.wao = series.serie_id` : ""
 
   if (!platform_id && !tag_id) {
     return `
@@ -38,6 +40,7 @@ export const getAllSeriesQuery = ({ sort, filter, platform_id, tag_id }: GetAllS
         INNER JOIN tags ON t.tag_id = tags.id
         INNER JOIN series ON t.serie_id = series.serie_id
         INNER JOIN platforms ON series.plateform = platforms.platform_id
+        ${waoQuery}
         GROUP BY platforms.platform_name, series.serie_id
         ${orderQuery};
     `
@@ -49,6 +52,7 @@ export const getAllSeriesQuery = ({ sort, filter, platform_id, tag_id }: GetAllS
         INNER JOIN tags ON t.tag_id = tags.id
         INNER JOIN series ON t.serie_id = series.serie_id
         INNER JOIN platforms ON series.plateform = platforms.platform_id
+        ${waoQuery}
         WHERE ${platformQuery}
         GROUP BY platforms.platform_name, series.serie_id
         ${orderQuery};
@@ -61,6 +65,7 @@ export const getAllSeriesQuery = ({ sort, filter, platform_id, tag_id }: GetAllS
         INNER JOIN tags ON t.tag_id = tags.id
         INNER JOIN series ON t.serie_id = series.serie_id
         INNER JOIN platforms ON series.plateform = platforms.platform_id
+        ${waoQuery}
         GROUP BY platforms.platform_name, series.serie_id
         HAVING ${tagQuery}
         ${orderQuery};
@@ -73,6 +78,7 @@ export const getAllSeriesQuery = ({ sort, filter, platform_id, tag_id }: GetAllS
         INNER JOIN tags ON t.tag_id = tags.id
         INNER JOIN series ON t.serie_id = series.serie_id
         INNER JOIN platforms ON series.plateform = platforms.platform_id
+        ${waoQuery}
         WHERE ${platformQuery}
         GROUP BY platforms.platform_name, platforms.platform_id, series.serie_id
         HAVING ${tagQuery}
